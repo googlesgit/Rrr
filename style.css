@@ -1,0 +1,78 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #1d1d1d, #3a3a3a);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+p {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.small {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Button */
+button {
+  margin-top: 30px;
+  padding: 15px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: #ff3355;
+}
+
+/* Hidden message */
+.hidden {
+  margin-top: 30px;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.show {
+  opacity: 1;
+}
+
+/* Fade animations */
+.fade {
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
+}
+
+.delay1 {
+  animation-delay: 1s;
+}
+
+.delay2 {
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
