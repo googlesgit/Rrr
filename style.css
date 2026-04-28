@@ -1,60 +1,74 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  /* Midnight Galaxy Gradient */
   background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%) !important;
+  background-color: #090a0f; 
   height: 100vh;
   width: 100vw;
   color: white;
   text-align: center;
-  overflow: hidden; /* Stops scrolling */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centers items vertically */
-  align-items: center;    /* Centers items horizontally */
+  z-index: 100;
   position: relative;
-  z-index: 10;
+  width: 90%;
+  max-width: 600px;
 }
 
-/* Footer Fix */
-footer {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.6;
-  z-index: 100; /* Keeps it above everything */
+/* Animations for text appearance */
+.fade {
+  opacity: 0;
+  animation: fadeIn 1.5s forwards;
 }
 
-/* Animations */
-.fade { opacity: 0; animation: fadeIn 1.5s forwards; }
-.delay1 { animation-delay: 1s; }
-.delay2 { animation-delay: 2.5s; }
-.delay3 { animation-delay: 4s; }
+.delay1 { animation-delay: 1.2s !important; }
+.delay2 { animation-delay: 2.5s !important; }
+.delay3 { animation-delay: 4s !important; }
 
-@keyframes fadeIn { to { opacity: 1; } }
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
 
-/* Button */
+/* Button Styling */
 button {
-  margin-top: 20px;
-  padding: 15px 30px;
-  border-radius: 50px;
+  margin-top: 30px;
+  padding: 15px 35px;
+  font-size: 18px;
   border: none;
-  background: #ff4d6d;
+  border-radius: 50px;
+  background: linear-gradient(45deg, #ff4d6d, #ff758c);
   color: white;
   cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+  transition: transform 0.3s ease;
 }
 
-.hidden { display: none; }
-.show { display: block !important; }
+button:hover {
+  transform: scale(1.1);
+}
 
-/* Love Bubbles Container */
+/* Hidden Message Logic */
+.hidden { display: none; }
+
+.show {
+  display: block !important;
+  animation: fadeIn 2s forwards;
+}
+
+.small {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 20px;
+}
+
+/* Love Bubbles / Hearts CSS */
 #heart-container {
   position: fixed;
   top: 0;
@@ -62,18 +76,28 @@ button {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 5; /* Behind text but in front of background */
+  z-index: 50;
 }
 
 .heart {
   position: absolute;
-  bottom: -10%;
+  bottom: -50px;
+  pointer-events: none;
   animation: floatUp linear forwards;
 }
 
 @keyframes floatUp {
-  0% { transform: translateY(0); opacity: 0; }
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
   10% { opacity: 1; }
   90% { opacity: 1; }
-  100% { transform: translateY(-110vh); opacity: 0; }
+  100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+}
+
+footer {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  font-size: 14px;
+  opacity: 0.5;
+  z-index: 110;
 }
