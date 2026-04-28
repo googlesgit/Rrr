@@ -4,32 +4,43 @@ const bgm = document.getElementById("bgm");
 const heartContainer = document.getElementById("heart-container");
 
 btn.addEventListener("click", () => {
-  // 1. Reveal message & Play Music
+  // 1. Reveal hidden message
   message.classList.add("show");
+  
+  // 2. Hide the button
   btn.style.display = "none";
-  bgm.play();
+  
+  // 3. Play Music
+  bgm.play().catch(error => console.log("Audio waiting for user..."));
 
-  // 2. Start creating bubbles/hearts
-  setInterval(createHeart, 300);
+  // 4. Start the heart/bubble effect
+  // We call it once immediately, then set an interval
+  createHeart();
+  setInterval(createHeart, 250); 
 });
 
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
   
-  // Randomly pick a heart or bubble emoji
-  const shapes = ["❤️", "💖", "✨", "🌸", "🫧"];
-  heart.innerText = shapes[Math.floor(Math.random() * shapes.length)];
+  // Array of things to float up
+  const items = ["❤️", "💖", "✨", "🫧", "💙"];
+  heart.innerText = items[Math.floor(Math.random() * items.length)];
   
-  // Random position and size
+  // Random horizontal position (0 to 100% of screen width)
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 20 + 10 + "px";
-  heart.style.animationDuration = Math.random() * 3 + 2 + "s"; // 2-5 seconds
   
+  // Random size
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  
+  // Random speed (between 3 and 6 seconds)
+  heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+  
+  // Add to the container
   heartContainer.appendChild(heart);
   
-  // Remove from DOM after animation finishes to keep it fast
+  // Clean up after it floats away
   setTimeout(() => {
     heart.remove();
-  }, 5000);
+  }, 6000);
 }
