@@ -1,9 +1,19 @@
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #1d1d1d, #3a3a3a);
+  /* New softer, romantic gradient */
+  background: linear-gradient(135deg, #1a0a1a, #4a1d2c, #2a0a1a);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
   color: white;
   text-align: center;
+  overflow: hidden; /* Prevents scrollbars from hearts */
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .container {
@@ -11,77 +21,73 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 20px;
+  position: relative;
+  z-index: 10; /* Keeps text above hearts */
 }
 
-h1 {
-  font-size: 48px;
-}
-
-p {
-  font-size: 20px;
-  margin: 10px 0;
-}
-
-.small {
-  font-size: 14px;
-  opacity: 0.7;
-}
-
-/* Button */
+/* Button Appearance */
 button {
   margin-top: 30px;
-  padding: 15px 25px;
+  padding: 15px 30px;
   font-size: 18px;
   border: none;
-  border-radius: 12px;
+  border-radius: 50px;
   background: #ff4d6d;
   color: white;
+  box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
   cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  transform: scale(1.05);
-  background: #ff3355;
+  transform: scale(1.1);
+  background: #ff758c;
+  box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
 }
 
 /* Hidden message */
 .hidden {
+  display: none; /* Changed to display none to keep layout clean */
   margin-top: 30px;
-  opacity: 0;
-  transition: opacity 1.5s ease;
 }
 
 .show {
-  opacity: 1;
+  display: block;
+  animation: fadeIn 2s forwards;
 }
 
-/* Fade animations */
-.fade {
-  opacity: 0;
-  animation: fadeIn 1.5s forwards;
-}
-
-.delay1 {
-  animation-delay: 1s;
-}
-
-.delay2 {
-  animation-delay: 2s;
-}
+/* Timing for text and button */
+.fade { opacity: 0; animation: fadeIn 1.5s forwards; }
+.delay1 { animation-delay: 1.5s; }
+.delay2 { animation-delay: 3s; }
+.delay3 { animation-delay: 4.5s; } /* Button appears last */
 
 @keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+  to { opacity: 1; }
+}
+
+/* Heart Animation Styles */
+.heart {
+  position: absolute;
+  bottom: -10%;
+  color: rgba(255, 77, 109, 0.7);
+  font-size: 20px;
+  user-select: none;
+  pointer-events: none;
+  animation: float Up 5s linear forwards;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-110vh) translateX(50px) rotate(45deg); opacity: 0; }
 }
 
 footer {
   position: fixed;
-  bottom: 10px;
+  bottom: 15px;
   width: 100%;
-  text-align: center;
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.6;
 }
