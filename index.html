@@ -3,8 +3,487 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Something for You ✨</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>For Rajiiii ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1714;
+      --paper: #faf7f2;
+      --paper-warm: #f5f0e8;
+      --accent: #8b5e52;
+      --accent-light: #c4957f;
+      --line: rgba(26,23,20,0.1);
+      --muted: rgba(26,23,20,0.4);
+      --faint: rgba(26,23,20,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── GRAIN OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.6;
+    }
+
+    /* ─── PASSWORD SCREEN ─── */
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      background: var(--paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    #loginScreen.fade-out {
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+    }
+
+    .login-inner {
+      text-align: center;
+      width: 90%;
+      max-width: 380px;
+    }
+
+    .login-inner .monogram {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+      letter-spacing: -2px;
+    }
+
+    .login-inner .subtitle {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 20px;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      font-family: 'Jost', sans-serif;
+      font-size: 15px;
+      font-weight: 200;
+      letter-spacing: 8px;
+      text-align: center;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--accent-light);
+    }
+
+    .input-wrap input::placeholder {
+      letter-spacing: 2px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      border-radius: 2px;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .login-btn:hover { background: var(--accent); }
+    .login-btn:active { transform: scale(0.98); }
+
+    .hint-text {
+      margin-top: 24px;
+      font-size: 12px;
+      font-weight: 200;
+      color: var(--muted);
+      font-style: italic;
+      min-height: 18px;
+      transition: opacity 0.4s;
+    }
+
+    .hint-text.shake {
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* ─── MAIN PAGE ─── */
+    #mainPage {
+      display: none;
+      min-height: 100vh;
+    }
+
+    #mainPage.visible { display: block; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      position: relative;
+      text-align: center;
+    }
+
+    .hero-date {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: rise 1s 0.3s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 10vw, 88px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: rise 1s 0.6s forwards;
+    }
+
+    .hero h1 em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .hero-lines {
+      max-width: 440px;
+      opacity: 0;
+      animation: rise 1s 1.1s forwards;
+    }
+
+    .hero-lines p {
+      font-size: 15px;
+      font-weight: 200;
+      line-height: 2;
+      color: var(--muted);
+    }
+
+    .reveal-btn {
+      margin-top: 52px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--accent-light);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--accent);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: color 0.3s, border-color 0.3s;
+      opacity: 0;
+      animation: rise 1s 1.8s forwards;
+    }
+
+    .reveal-btn:hover { color: var(--ink); border-color: var(--ink); }
+
+    /* horizontal rule divider */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--accent-light);
+      margin: 0 auto 52px;
+    }
+
+    /* ─── FIRST MESSAGE REVEAL ─── */
+    #firstReveal {
+      display: none;
+      padding: 0 20px 80px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      animation: rise 1.2s forwards;
+    }
+
+    #firstReveal.show { display: block; }
+
+    .first-message {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .first-message em { color: var(--accent); font-style: italic; }
+
+    .first-small {
+      font-size: 13px;
+      font-weight: 200;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .scroll-cue {
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .scroll-cue .arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--accent-light));
+      animation: pulse-line 2s infinite;
+    }
+
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ─── TIMELINE ─── */
+    #timeline {
+      display: none;
+      padding: 80px 20px 120px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    #timeline.show { display: block; }
+
+    .timeline-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .timeline-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Each memory entry */
+    .memory-entry {
+      display: grid;
+      grid-template-columns: 80px 1px 1fr;
+      gap: 0 28px;
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .memory-entry.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .entry-date {
+      text-align: right;
+      padding-top: 4px;
+    }
+
+    .entry-date .year {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 2px;
+      color: var(--muted);
+      display: block;
+    }
+
+    .entry-date .day {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
+    }
+
+    .entry-line {
+      background: var(--line);
+      position: relative;
+    }
+
+    .entry-line::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-light);
+    }
+
+    .entry-body {
+      padding-top: 0;
+    }
+
+    .entry-tag {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 10px;
+    }
+
+    .entry-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 3vw, 21px);
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+
+    .entry-sig {
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: 200;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    /* Loading / empty states */
+    .timeline-loading {
+      text-align: center;
+      padding: 40px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 200;
+      letter-spacing: 2px;
+    }
+
+    /* ─── FLOATING HEARTS ─── */
+    #heartContainer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -50px;
+      animation: floatUp linear forwards;
+      font-size: 14px;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.4; }
+      100% { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 3px;
+      color: var(--muted);
+      background: linear-gradient(to top, var(--paper) 60%, transparent);
+      z-index: 200;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── AUDIO ─── */
+    #audioBtn {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      width: 36px;
+      height: 36px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--muted);
+      z-index: 300;
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    #audioBtn:hover { border-color: var(--accent-light); color: var(--accent); }
+    #audioBtn.show { display: flex; }
+  </style>
 </head>
 <body>
 
@@ -12,46 +491,272 @@
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- PASSWORD SCREEN -->
-  <div id="loginScreen" class="login-screen">
-    <div class="login-box">
-      <h2>Only for Rajiiii 💙</h2>
+  <!-- ─── PASSWORD ─── -->
+  <div id="loginScreen">
+    <div class="login-inner">
+      <div class="monogram">R</div>
+      <p class="subtitle">Only for Rajiiii</p>
+      <div class="input-wrap">
+        <input type="password" id="passwordInput" placeholder="enter your secret" autocomplete="off" />
+      </div>
+      <button class="login-btn" id="loginBtn">Open ✦</button>
+      <p class="hint-text" id="hintText">something attached to us alone ✦</p>
+    </div>
+  </div>
 
-      <input 
-        type="password" 
-        id="passwordInput" 
-        placeholder="Something only we know..."
-      />
+  <!-- ─── MAIN ─── -->
+  <div id="mainPage">
 
-      <button id="loginBtn">Enter ✨</button>
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-date" id="heroDate"></p>
+      <h1>Hey <em>Rajiiii</em></h1>
+      <div class="hero-lines">
+        <p>I didn't know what to send you.</p>
+        <p>So I made something instead.</p>
+      </div>
+      <button class="reveal-btn" id="revealBtn">Open it ✦</button>
+    </section>
 
-      <p id="hintText" class="hint">
-        password is something attached to us alone 💭
+    <!-- First message reveal -->
+    <div id="firstReveal">
+      <div class="divider"></div>
+      <p class="first-message">
+        You're genuinely one of those people who just makes<br>
+        <em>everything better.</em>
       </p>
+      <p class="first-message">
+        I'm really glad I have you in my life.
+      </p>
+      <p class="first-small">(yeah... this was your surprise 😌)</p>
+
+      <div class="scroll-cue">
+        <span>every memory we have</span>
+        <div class="arrow"></div>
+      </div>
     </div>
+
+    <!-- Timeline of messages -->
+    <div id="timeline">
+      <div class="timeline-header">
+        <h2>From Ram · With love</h2>
+      </div>
+      <div id="entries"></div>
+    </div>
+
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="container hidden-page" id="mainPage">
-    <h1 class="fade intro">Hey Rajiiii 😊</h1>
-    <p class="fade delay1 intro">I didn’t know what to send you...</p>
-    <p class="fade delay2 intro">So I made something instead.</p>
+  <!-- Hearts -->
+  <div id="heartContainer"></div>
 
-    <button id="revealBtn" class="fade delay3">Open it 💫</button>
+  <!-- Audio toggle -->
+  <button id="audioBtn" title="Toggle music">♪</button>
 
-    <div id="hiddenMessage" class="hidden">
-      <p>You’re genuinely one of those people who just makes everything better.</p>
-      <p>I’m really glad I have you in my life 💙</p>
-      <p class="small">(yeah... this was your surprise 😌)</p>
-    </div>
-  </div>
+  <footer>Made with love · Ram ✦ Raji</footer>
 
-  <div id="heart-container"></div>
+  <script>
+    // ─── CONFIG ───────────────────────────────────────────────
+    // TODO: Replace with your Supabase details
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const PASSWORD = '8699';
+    // ──────────────────────────────────────────────────────────
 
-  <footer>
-    Made with ❤️ for Rajiiii from Ram ✨
-  </footer>
+    // Set today's date in hero
+    const heroDate = document.getElementById('heroDate');
+    heroDate.textContent = new Date().toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
 
-  <script src="script.js"></script>
+    // ─── PASSWORD LOGIC ───
+    let attempts = 0;
+    const loginScreen = document.getElementById('loginScreen');
+    const loginBtn = document.getElementById('loginBtn');
+    const passwordInput = document.getElementById('passwordInput');
+    const hintText = document.getElementById('hintText');
+    const mainPage = document.getElementById('mainPage');
+
+    const hints = [
+      'something attached to us alone ✦',
+      'come on... you can do it 😌',
+      'still wrong 😂',
+      'text Ram now to know 😉'
+    ];
+
+    function checkPassword() {
+      if (passwordInput.value === PASSWORD) {
+        loginScreen.classList.add('fade-out');
+        setTimeout(() => {
+          loginScreen.style.display = 'none';
+          mainPage.classList.add('visible');
+        }, 800);
+      } else {
+        attempts++;
+        passwordInput.value = '';
+        hintText.classList.remove('shake');
+        void hintText.offsetWidth;
+        hintText.classList.add('shake');
+        hintText.textContent = hints[Math.min(attempts, hints.length - 1)];
+      }
+    }
+
+    loginBtn.addEventListener('click', checkPassword);
+    passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
+
+    // ─── REVEAL BUTTON ───
+    const revealBtn = document.getElementById('revealBtn');
+    const firstReveal = document.getElementById('firstReveal');
+    const timeline = document.getElementById('timeline');
+    const bgm = document.getElementById('bgm');
+    const audioBtn = document.getElementById('audioBtn');
+    let heartsInterval = null;
+    let audioPlaying = false;
+
+    revealBtn.addEventListener('click', () => {
+      // Fade hero text
+      document.querySelector('.hero-lines').style.opacity = '0';
+      document.querySelector('.hero-lines').style.transition = 'opacity 0.6s';
+      revealBtn.style.opacity = '0';
+      revealBtn.style.transition = 'opacity 0.4s';
+
+      setTimeout(() => {
+        revealBtn.style.display = 'none';
+        firstReveal.classList.add('show');
+        timeline.classList.add('show');
+        loadMemories();
+        startHearts();
+        audioBtn.classList.add('show');
+
+        bgm.play().then(() => {
+          audioPlaying = true;
+          audioBtn.textContent = '♪';
+        }).catch(() => {});
+      }, 500);
+    });
+
+    // ─── AUDIO TOGGLE ───
+    audioBtn.addEventListener('click', () => {
+      if (audioPlaying) {
+        bgm.pause();
+        audioPlaying = false;
+        audioBtn.textContent = '♩';
+      } else {
+        bgm.play();
+        audioPlaying = true;
+        audioBtn.textContent = '♪';
+      }
+    });
+
+    // ─── HEARTS ───
+    const heartContainer = document.getElementById('heartContainer');
+    const emojis = ['❤️', '💙', '✨', '🫧', '🌸', '💛'];
+
+    function createHeart() {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (Math.random() * 12 + 10) + 'px';
+      h.style.animationDuration = (Math.random() * 5 + 6) + 's';
+      heartContainer.appendChild(h);
+      setTimeout(() => h.remove(), 11000);
+    }
+
+    function startHearts() {
+      createHeart();
+      heartsInterval = setInterval(createHeart, 600);
+    }
+
+    // ─── SUPABASE FETCH ───
+    async function loadMemories() {
+      const entriesEl = document.getElementById('entries');
+      entriesEl.innerHTML = '<div class="timeline-loading">loading memories...</div>';
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/memories?order=created_at.desc`,
+          { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+        );
+
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+
+        if (!data.length) {
+          entriesEl.innerHTML = '<div class="timeline-loading">more memories coming soon ✦</div>';
+          return;
+        }
+
+        entriesEl.innerHTML = '';
+        data.forEach((mem, i) => {
+          const entry = buildEntry(mem, i);
+          entriesEl.appendChild(entry);
+        });
+
+        // Intersection observer for scroll animations
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.memory-entry').forEach(el => observer.observe(el));
+
+      } catch (err) {
+        // If Supabase not configured yet, show placeholder
+        entriesEl.innerHTML = buildPlaceholder();
+        // Still animate them
+        setTimeout(() => {
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+          }, { threshold: 0.15 });
+          document.querySelectorAll('.memory-entry').forEach(el => observer.observe(el));
+        }, 100);
+      }
+    }
+
+    function buildEntry(mem, i) {
+      const d = new Date(mem.created_at);
+      const day = d.getDate().toString().padStart(2, '0');
+      const month = d.toLocaleString('en-GB', { month: 'short' }).toUpperCase();
+      const year = d.getFullYear();
+
+      const el = document.createElement('div');
+      el.className = 'memory-entry';
+      el.innerHTML = `
+        <div class="entry-date">
+          <span class="year">${month} ${year}</span>
+          <span class="day">${day}</span>
+        </div>
+        <div class="entry-line"></div>
+        <div class="entry-body">
+          ${mem.tag ? `<div class="entry-tag">${mem.tag}</div>` : ''}
+          <div class="entry-text">${mem.message}</div>
+          <div class="entry-sig">— Ram</div>
+        </div>
+      `;
+      return el;
+    }
+
+    function buildPlaceholder() {
+      // Shown before Supabase is configured
+      const placeholders = [
+        { date: 'Today', message: 'More memories from Ram will live here. Every one of them, forever.', tag: 'a beginning' },
+        { date: 'Soon', message: 'Every little moment, every thing left unsaid — this is where it all goes.', tag: 'a promise' }
+      ];
+
+      return placeholders.map(p => `
+        <div class="memory-entry">
+          <div class="entry-date">
+            <span class="year">—</span>
+            <span class="day">—</span>
+          </div>
+          <div class="entry-line"></div>
+          <div class="entry-body">
+            <div class="entry-tag">${p.tag}</div>
+            <div class="entry-text">${p.message}</div>
+            <div class="entry-sig">— Ram</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
 </body>
 </html>
