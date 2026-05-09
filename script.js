@@ -39,10 +39,10 @@ function checkPassword() {
       hintText.innerText = "come on... you can do it 😌";
     } 
     else if (attempts === 2) {
-      hintText.innerText = "text Ram now to know 😉";
+      hintText.innerText = "still wrong 😂";
     } 
     else {
-      hintText.innerText = "still wrong 😂";
+      hintText.innerText = "text Ram now to know 😉";
     }
   }
 }
