@@ -101,3 +101,54 @@ footer {
   opacity: 0.5;
   z-index: 110;
 }
+/* LOGIN SCREEN */
+
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.login-box {
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hint {
+  margin-top: 20px;
+  font-size: 14px;
+  opacity: 0.7;
+  min-height: 20px;
+}
+
+/* MAIN PAGE HIDDEN INITIALLY */
+
+.hidden-page {
+  display: none;
+}
+
+.show-page {
+  display: block;
+  animation: fadeIn 1.5s forwards;
+}
