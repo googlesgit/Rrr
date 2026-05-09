@@ -11,7 +11,7 @@ const loginScreen = document.getElementById("loginScreen");
 const mainPage = document.getElementById("mainPage");
 const hintText = document.getElementById("hintText");
 
-const correctPassword = "rajiandram"; // CHANGE THIS
+const correctPassword = "8699"; 
 
 let attempts = 0;
 
