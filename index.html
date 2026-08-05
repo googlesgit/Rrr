@@ -483,6 +483,72 @@
 
     #audioBtn:hover { border-color: var(--accent-light); color: var(--accent); }
     #audioBtn.show { display: flex; }
+
+    /* ─── CONFETTI ─── */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 600;
+    }
+
+    /* ─── BIRTHDAY LETTER ─── */
+    #birthdayLetter {
+      display: none;
+      padding: 20px 20px 60px;
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #birthdayLetter.show { display: block; animation: rise 1.2s forwards; }
+
+    .letter-tag {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 20px;
+    }
+
+    .letter-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 6vw, 50px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--accent);
+      margin-bottom: 36px;
+      letter-spacing: -0.5px;
+    }
+
+    .letter-body {
+      text-align: left;
+      background: var(--paper-warm);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 40px 32px;
+    }
+
+    .letter-body p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(16px, 3vw, 19px);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--ink);
+      margin-bottom: 18px;
+    }
+
+    .letter-body p:last-of-type { margin-bottom: 0; }
+
+    .letter-sig {
+      margin-top: 28px;
+      font-size: 14px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      text-align: right;
+    }
   </style>
 </head>
 <body>
@@ -529,6 +595,52 @@
         I'm really glad I have you in my life.
       </p>
       <p class="first-small">(yeah... this was your surprise 😌)</p>
+    </div>
+
+    <!-- Birthday letter -->
+    <div id="birthdayLetter">
+      <div class="divider"></div>
+      <p class="letter-tag">but also...</p>
+      <h2 class="letter-heading">Happy Birthday, Rajiiii ✦</h2>
+      <div class="letter-body">
+        <p>
+          **To my dearest Rajiiiii, ❤️**
+
+If you're reading this, it means you made it to the little surprise I wanted to create just for you.
+
+I know I've already wished you today, but somehow it still doesn't feel enough. Seventeen years of friendship can't be summed up in just a few messages.
+
+Thank you for being a part of my life for all these years. Thank you for all the little moments that probably seemed ordinary back then but have now become some of my favorite memories. From school days and lunch breaks to all the laughter we still carry with us today, I'm grateful for every bit of it.
+
+Life has taken us to different places, and we've both grown in so many ways, but one thing has never changed—you've always been someone I know I can count on, and I hope you know you can always count on me too.
+
+I genuinely wish that every dream you're quietly working towards finds its way to you. I hope you build the life you've always imagined, find happiness in the little things, stay healthy, keep that beautiful heart of yours, and always have reasons to smile.
+
+And whenever life feels overwhelming, I hope you remember this...
+
+You don't have to figure everything out by yourself.
+
+You have people who love you.
+You have people who believe in you.
+And you'll always have me.
+
+Distance has never changed our friendship, and it never will.
+
+One day we'll finally go on that long-overdue trip, laugh about our school stories all over again, and probably realize that, even after all these years, we're still the same idiots at heart.
+
+Until then, keep chasing your dreams, keep making us proud, and keep being the wonderful person you've always been.
+
+Happy Birthday once again, Rajiiiii.
+
+Thank you for being one of the greatest gifts my childhood ever gave me.
+
+With lots of love,
+
+**Sai ❤️**
+
+        </p>
+        <div class="letter-sig">— Ram</div>
+      </div>
 
       <div class="scroll-cue">
         <span>every memory we have</span>
@@ -548,6 +660,9 @@
 
   <!-- Hearts -->
   <div id="heartContainer"></div>
+
+  <!-- Confetti -->
+  <canvas id="confettiCanvas"></canvas>
 
   <!-- Audio toggle -->
   <button id="audioBtn" title="Toggle music">♪</button>
@@ -586,6 +701,7 @@
     function checkPassword() {
       if (passwordInput.value === PASSWORD) {
         loginScreen.classList.add('fade-out');
+        fireConfetti();
         setTimeout(() => {
           loginScreen.style.display = 'none';
           mainPage.classList.add('visible');
@@ -606,6 +722,7 @@
     // ─── REVEAL BUTTON ───
     const revealBtn = document.getElementById('revealBtn');
     const firstReveal = document.getElementById('firstReveal');
+    const birthdayLetter = document.getElementById('birthdayLetter');
     const timeline = document.getElementById('timeline');
     const bgm = document.getElementById('bgm');
     const audioBtn = document.getElementById('audioBtn');
@@ -631,6 +748,13 @@
           audioPlaying = true;
           audioBtn.textContent = '♪';
         }).catch(() => {});
+
+        // Reveal the birthday letter a beat after the first message,
+        // so it still lands as a second surprise
+        setTimeout(() => {
+          birthdayLetter.classList.add('show');
+          fireConfetti();
+        }, 1400);
       }, 500);
     });
 
@@ -665,6 +789,80 @@
     function startHearts() {
       createHeart();
       heartsInterval = setInterval(createHeart, 600);
+    }
+
+    // ─── CONFETTI ───
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    const confettiColors = ['#8b5e52', '#c4957f', '#e8c4a0', '#f5f0e8', '#d98f7a'];
+    let confettiPieces = [];
+    let confettiRunning = false;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function fireConfetti(count = 140) {
+      const w = confettiCanvas.width;
+      for (let i = 0; i < count; i++) {
+        confettiPieces.push({
+          x: Math.random() * w,
+          y: -20 - Math.random() * 200,
+          size: Math.random() * 6 + 4,
+          color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+          speedY: Math.random() * 2.5 + 2,
+          speedX: (Math.random() - 0.5) * 2.5,
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 8,
+          shape: Math.random() > 0.5 ? 'rect' : 'circle',
+          life: 0,
+          maxLife: 260 + Math.random() * 80
+        });
+      }
+      if (!confettiRunning) {
+        confettiRunning = true;
+        requestAnimationFrame(animateConfetti);
+      }
+    }
+
+    function animateConfetti() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      confettiPieces.forEach(p => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotationSpeed;
+        p.life++;
+
+        const fade = p.life > p.maxLife - 40 ? Math.max(0, (p.maxLife - p.life) / 40) : 1;
+
+        confettiCtx.save();
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate((p.rotation * Math.PI) / 180);
+        confettiCtx.globalAlpha = fade;
+        confettiCtx.fillStyle = p.color;
+
+        if (p.shape === 'rect') {
+          confettiCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      });
+
+      confettiPieces = confettiPieces.filter(p => p.life < p.maxLife && p.y < confettiCanvas.height + 40);
+
+      if (confettiPieces.length > 0) {
+        requestAnimationFrame(animateConfetti);
+      } else {
+        confettiRunning = false;
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
     }
 
     // ─── SUPABASE FETCH ───
