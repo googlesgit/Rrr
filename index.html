@@ -12,7 +12,7 @@
       --paper: #faf7f2;
       --paper-warm: #f5f0e8;
       --accent: #8b5e52;
-      --accent-light: #c4957f;
+      --accent-light: #b07c65;
       --line: rgba(26,23,20,0.1);
       --muted: rgba(26,23,20,0.6);
       --faint: rgba(26,23,20,0.06);
@@ -37,6 +37,16 @@
       pointer-events: none;
       z-index: 1000;
       opacity: 0.6;
+    }
+
+    /* ─── VIGNETTE ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 40;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(26,23,20,0.07) 100%);
     }
 
     /* ─── PASSWORD SCREEN ─── */
@@ -209,7 +219,7 @@
 
     .hero-lines p {
       font-size: 15px;
-      font-weight: 200;
+      font-weight: 300;
       line-height: 2;
       color: var(--muted);
     }
@@ -260,15 +270,69 @@
       line-height: 1.8;
       color: var(--ink);
       margin-bottom: 16px;
+      min-height: 1.8em;
     }
 
     .first-message em { color: var(--accent); font-style: italic; }
+
+    /* blinking caret for typewriter */
+    .caret {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: -0.15em;
+      animation: blink 0.9s steps(1) infinite;
+    }
+    @keyframes blink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
 
     .first-small {
       font-size: 13px;
       font-weight: 200;
       color: var(--muted);
       font-style: italic;
+      transition: opacity 0.8s ease;
+    }
+
+    /* ─── FRIENDSHIP COUNTER ─── */
+    .counter {
+      margin-top: 44px;
+      transition: opacity 0.9s ease;
+    }
+    .counter .line {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(18px, 3.4vw, 24px);
+      color: var(--accent);
+    }
+    .counter .sub {
+      margin-top: 8px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ─── POLAROID (optional photo) ─── */
+    .polaroid {
+      display: inline-block;
+      background: #fff;
+      padding: 12px 12px 40px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 34px rgba(26,23,20,0.14);
+      transform: rotate(-2.5deg);
+      margin: 36px auto 8px;
+    }
+    .polaroid img { display: block; width: 100%; max-width: 280px; }
+    .polaroid .cap {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 12px;
+      font-size: 14px;
     }
 
     .scroll-cue {
@@ -391,7 +455,7 @@
     .entry-text {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(17px, 3vw, 21px);
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1.75;
       color: var(--ink);
     }
@@ -420,6 +484,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 50;
+      transition: transform 0.3s ease-out;
     }
 
     .heart {
@@ -436,6 +501,56 @@
       90% { opacity: 0.4; }
       100% { transform: translateY(-110vh); opacity: 0; }
     }
+
+    /* ─── CURSOR HEART TRAIL ─── */
+    .cursor-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 900;
+      transform: translate(-50%, -50%);
+      animation: trailFade 1s ease forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes trailFade {
+      0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      100% { opacity: 0;   transform: translate(-50%, -150%) scale(0.4) rotate(20deg); }
+    }
+
+    /* ─── HIDDEN SECRET NOTE ─── */
+    #secretHeart {
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 300;
+      opacity: 0.35;
+      transition: opacity 0.3s, transform 0.3s;
+      user-select: none;
+    }
+    #secretHeart:hover { opacity: 1; transform: scale(1.25); }
+
+    #secretNote {
+      position: fixed;
+      bottom: 52px;
+      left: 18px;
+      max-width: 260px;
+      background: var(--paper-warm);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 16px 18px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      z-index: 320;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.4s, transform 0.4s;
+      box-shadow: 0 8px 28px rgba(26,23,20,0.12);
+    }
+    #secretNote.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
     /* ─── FOOTER ─── */
     footer {
@@ -537,8 +652,12 @@
       line-height: 1.9;
       color: var(--ink);
       margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
+    .letter-body p.visible { opacity: 1; transform: translateY(0); }
     .letter-body p:last-of-type { margin-bottom: 0; }
 
     .letter-sig {
@@ -584,17 +703,17 @@
       <button class="reveal-btn" id="revealBtn">Open it ✦</button>
     </section>
 
-    <!-- First message reveal -->
+    <!-- First message reveal (typed out by JS) -->
     <div id="firstReveal">
       <div class="divider"></div>
-      <p class="first-message">
-        You're genuinely one of those people who just makes<br>
-        <em>everything better.</em>
-      </p>
-      <p class="first-message">
-        I'm really glad I have you in my life.
-      </p>
-      <p class="first-small">(yeah... this was your surprise 😌)</p>
+      <div id="typeTarget" class="first-message"></div>
+      <p class="first-small" id="firstSmall" style="opacity:0;">(yeah... this was your surprise 😌)</p>
+
+      <!-- Friendship counter -->
+      <div class="counter" id="counter" style="opacity:0;"></div>
+
+      <!-- OPTIONAL PHOTO: set PHOTO_URL in the config below to show a polaroid here -->
+      <div id="photoSlot"></div>
     </div>
 
     <!-- Birthday letter -->
@@ -647,15 +766,43 @@
   <!-- Audio toggle -->
   <button id="audioBtn" title="Toggle music">♪</button>
 
+  <!-- Hidden secret note -->
+  <div id="secretHeart" title="pssst...">🤍</div>
+  <div id="secretNote"></div>
+
   <footer>Made with love · Ram ✦ Raji</footer>
 
   <script>
     // ─── CONFIG ───────────────────────────────────────────────
-    // TODO: Replace with your Supabase details
     const SUPABASE_URL = 'https://hoafkdzqerdzabntomcg.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_QyChN-NXjOnE_LG89lqYVg_Pvt51h2E';
     const PASSWORD = '8699';
+
+    // Her birthday — 'MM-DD'. Confetti only fires on this day.
+    const BIRTHDAY = '08-06';
+
+    // Friendship start date — 'YYYY-MM-DD'. EDIT THIS to your real date.
+    const FRIENDSHIP_START = '2009-08-06';
+
+    // Optional photo: paste an image URL to show a polaroid on the reveal.
+    // Leave '' to show nothing.
+    const PHOTO_URL = '';
+    const PHOTO_CAPTION = 'us, always ✦';
+
+    // A tiny extra note hidden behind the corner heart.
+    const SECRET_NOTE = "you found it 🤍 just one more: i'm really lucky it's you.";
     // ──────────────────────────────────────────────────────────
+
+    // Is today her birthday?
+    function isBirthdayToday() {
+      const now = new Date();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      return `${mm}-${dd}` === BIRTHDAY;
+    }
+    function maybeConfetti(count) {
+      if (isBirthdayToday()) fireConfetti(count);
+    }
 
     // Set today's date in hero
     const heroDate = document.getElementById('heroDate');
@@ -678,13 +825,19 @@
       'text Ram now to know 😉'
     ];
 
+    function unlock() {
+      mainPage.classList.add('visible');
+      enableMainFX();
+    }
+
     function checkPassword() {
       if (passwordInput.value === PASSWORD) {
+        try { localStorage.setItem('raji_opened', '1'); } catch (e) {}
         loginScreen.classList.add('fade-out');
-        fireConfetti();
+        maybeConfetti();
         setTimeout(() => {
           loginScreen.style.display = 'none';
-          mainPage.classList.add('visible');
+          unlock();
         }, 800);
       } else {
         attempts++;
@@ -699,6 +852,15 @@
     loginBtn.addEventListener('click', checkPassword);
     passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPassword(); });
 
+    // ─── ALREADY-OPENED: skip password on refresh ───
+    // (Works on your real hosting; harmless if storage is blocked.)
+    try {
+      if (localStorage.getItem('raji_opened') === '1') {
+        loginScreen.style.display = 'none';
+        unlock();
+      }
+    } catch (e) {}
+
     // ─── REVEAL BUTTON ───
     const revealBtn = document.getElementById('revealBtn');
     const firstReveal = document.getElementById('firstReveal');
@@ -708,9 +870,12 @@
     const audioBtn = document.getElementById('audioBtn');
     let heartsInterval = null;
     let audioPlaying = false;
+    let revealed = false;
 
     revealBtn.addEventListener('click', () => {
-      // Fade hero text
+      if (revealed) return;
+      revealed = true;
+
       document.querySelector('.hero-lines').style.opacity = '0';
       document.querySelector('.hero-lines').style.transition = 'opacity 0.6s';
       revealBtn.style.opacity = '0';
@@ -723,20 +888,134 @@
         loadMemories();
         startHearts();
         audioBtn.classList.add('show');
+        runTypewriter();
+        renderPhoto();
 
         bgm.play().then(() => {
           audioPlaying = true;
           audioBtn.textContent = '♪';
         }).catch(() => {});
 
-        // Reveal the birthday letter a beat after the first message,
-        // so it still lands as a second surprise
         setTimeout(() => {
           birthdayLetter.classList.add('show');
-          fireConfetti();
+          observeLetter();
+          maybeConfetti();
         }, 1400);
       }, 500);
     });
+
+    // ─── TYPEWRITER ───
+    const typeSegments = [
+      { t: "You're genuinely one of those people who just makes ", accent: false },
+      { t: "everything better.", accent: true },
+      { t: "\n\n", accent: false },
+      { t: "I'm really glad I have you in my life.", accent: false }
+    ];
+
+    function runTypewriter() {
+      const target = document.getElementById('typeTarget');
+      target.innerHTML = '';
+      const caret = document.createElement('span');
+      caret.className = 'caret';
+      target.appendChild(caret);
+
+      let si = 0, ci = 0, current = null;
+      const speed = 42;
+
+      function step() {
+        if (si >= typeSegments.length) {
+          caret.remove();
+          finishFirstReveal();
+          return;
+        }
+        const seg = typeSegments[si];
+
+        if (seg.t === "\n\n") {
+          target.insertBefore(document.createElement('br'), caret);
+          target.insertBefore(document.createElement('br'), caret);
+          si++; ci = 0; current = null;
+          setTimeout(step, speed * 4);
+          return;
+        }
+
+        if (ci === 0) {
+          current = document.createElement('span');
+          if (seg.accent) { current.style.color = 'var(--accent)'; current.style.fontStyle = 'italic'; }
+          target.insertBefore(current, caret);
+        }
+
+        current.textContent += seg.t[ci];
+        ci++;
+        if (ci >= seg.t.length) { si++; ci = 0; }
+        setTimeout(step, speed);
+      }
+      step();
+    }
+
+    function finishFirstReveal() {
+      document.getElementById('firstSmall').style.opacity = '1';
+      const c = document.getElementById('counter');
+      c.innerHTML = friendshipHTML();
+      c.style.opacity = '1';
+    }
+
+    // ─── FRIENDSHIP COUNTER ───
+    function friendshipDuration() {
+      const start = new Date(FRIENDSHIP_START);
+      const now = new Date();
+      let y = now.getFullYear() - start.getFullYear();
+      let m = now.getMonth() - start.getMonth();
+      let d = now.getDate() - start.getDate();
+      if (d < 0) {
+        m--;
+        const prevMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        d += prevMonthDays;
+      }
+      if (m < 0) { y--; m += 12; }
+      return { y, m, d };
+    }
+
+    function friendshipHTML() {
+      const { y, m, d } = friendshipDuration();
+      const parts = [];
+      if (y) parts.push(`${y} year${y !== 1 ? 's' : ''}`);
+      if (m) parts.push(`${m} month${m !== 1 ? 's' : ''}`);
+      parts.push(`${d} day${d !== 1 ? 's' : ''}`);
+      return `<div class="line">${parts.join(', ')} of friendship</div>
+              <div class="sub">and counting ✦</div>`;
+    }
+
+    // ─── OPTIONAL PHOTO ───
+    function renderPhoto() {
+      if (!PHOTO_URL) return;
+      const slot = document.getElementById('photoSlot');
+      slot.innerHTML = `
+        <div class="polaroid">
+          <img src="${PHOTO_URL}" alt="us">
+          <div class="cap">${PHOTO_CAPTION}</div>
+        </div>`;
+    }
+
+    // ─── LETTER PARAGRAPH FADE-IN ───
+    function observeLetter() {
+      const paras = document.querySelectorAll('.letter-body p');
+      if (!('IntersectionObserver' in window)) {
+        paras.forEach(p => p.classList.add('visible'));
+        return;
+      }
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      paras.forEach((p, i) => {
+        p.style.transitionDelay = (i % 6) * 0.08 + 's';
+        obs.observe(p);
+      });
+    }
 
     // ─── AUDIO TOGGLE ───
     audioBtn.addEventListener('click', () => {
@@ -751,7 +1030,7 @@
       }
     });
 
-    // ─── HEARTS ───
+    // ─── FLOATING HEARTS + PARALLAX ───
     const heartContainer = document.getElementById('heartContainer');
     const emojis = ['❤️', '💙', '✨', '🫧', '🌸', '💛'];
 
@@ -765,15 +1044,74 @@
       heartContainer.appendChild(h);
       setTimeout(() => h.remove(), 11000);
     }
-
     function startHearts() {
       createHeart();
       heartsInterval = setInterval(createHeart, 600);
     }
 
+    // ─── MAIN FX: cursor trail + parallax (enabled after unlock) ───
+    let fxEnabled = false;
+    const trailEmojis = ['❤️', '🩷', '✨', '💕'];
+    let lastTrail = 0;
+
+    function enableMainFX() {
+      if (fxEnabled) return;
+      fxEnabled = true;
+
+      document.addEventListener('mousemove', e => {
+        // parallax drift on floating hearts
+        const cx = (e.clientX / window.innerWidth - 0.5);
+        const cy = (e.clientY / window.innerHeight - 0.5);
+        heartContainer.style.transform = `translate(${cx * 22}px, ${cy * 22}px)`;
+
+        // cursor heart trail (throttled)
+        const now = Date.now();
+        if (now - lastTrail > 55) {
+          lastTrail = now;
+          spawnTrailHeart(e.clientX, e.clientY);
+        }
+      });
+
+      // touch support for the trail
+      document.addEventListener('touchmove', e => {
+        const t = e.touches[0];
+        if (!t) return;
+        const now = Date.now();
+        if (now - lastTrail > 55) {
+          lastTrail = now;
+          spawnTrailHeart(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+    }
+
+    function spawnTrailHeart(x, y) {
+      const h = document.createElement('div');
+      h.className = 'cursor-heart';
+      h.textContent = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+      h.style.left = x + (Math.random() * 14 - 7) + 'px';
+      h.style.top = y + (Math.random() * 14 - 7) + 'px';
+      h.style.fontSize = (Math.random() * 8 + 10) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1000);
+    }
+
+    // ─── SECRET NOTE ───
+    const secretHeart = document.getElementById('secretHeart');
+    const secretNote = document.getElementById('secretNote');
+    secretNote.textContent = SECRET_NOTE;
+    secretHeart.addEventListener('click', () => {
+      secretNote.classList.toggle('show');
+    });
+    document.addEventListener('click', e => {
+      if (!secretNote.contains(e.target) && e.target !== secretHeart) {
+        secretNote.classList.remove('show');
+      }
+    });
+
     // ─── CONFETTI ───
     const confettiCanvas = document.getElementById('confettiCanvas');
     const confettiCtx = confettiCanvas.getContext('2d');
+    // Tip: swap these for her favorite color if you like.
     const confettiColors = ['#8b5e52', '#c4957f', '#e8c4a0', '#f5f0e8', '#d98f7a'];
     let confettiPieces = [];
     let confettiRunning = false;
@@ -810,21 +1148,17 @@
 
     function animateConfetti() {
       confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-
       confettiPieces.forEach(p => {
         p.y += p.speedY;
         p.x += p.speedX;
         p.rotation += p.rotationSpeed;
         p.life++;
-
         const fade = p.life > p.maxLife - 40 ? Math.max(0, (p.maxLife - p.life) / 40) : 1;
-
         confettiCtx.save();
         confettiCtx.translate(p.x, p.y);
         confettiCtx.rotate((p.rotation * Math.PI) / 180);
         confettiCtx.globalAlpha = fade;
         confettiCtx.fillStyle = p.color;
-
         if (p.shape === 'rect') {
           confettiCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
         } else {
@@ -834,9 +1168,7 @@
         }
         confettiCtx.restore();
       });
-
       confettiPieces = confettiPieces.filter(p => p.life < p.maxLife && p.y < confettiCanvas.height + 40);
-
       if (confettiPieces.length > 0) {
         requestAnimationFrame(animateConfetti);
       } else {
@@ -849,38 +1181,25 @@
     async function loadMemories() {
       const entriesEl = document.getElementById('entries');
       entriesEl.innerHTML = '<div class="timeline-loading">loading memories...</div>';
-
       try {
         const res = await fetch(
           `${SUPABASE_URL}/rest/v1/memories?order=created_at.desc`,
           { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
         );
-
         if (!res.ok) throw new Error('fetch failed');
         const data = await res.json();
-
         if (!data.length) {
           entriesEl.innerHTML = '<div class="timeline-loading">more memories coming soon ✦</div>';
           return;
         }
-
         entriesEl.innerHTML = '';
-        data.forEach((mem, i) => {
-          const entry = buildEntry(mem, i);
-          entriesEl.appendChild(entry);
-        });
-
-        // Intersection observer for scroll animations
+        data.forEach((mem, i) => entriesEl.appendChild(buildEntry(mem, i)));
         const observer = new IntersectionObserver(entries => {
           entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.15 });
-
         document.querySelectorAll('.memory-entry').forEach(el => observer.observe(el));
-
       } catch (err) {
-        // If Supabase not configured yet, show placeholder
         entriesEl.innerHTML = buildPlaceholder();
-        // Still animate them
         setTimeout(() => {
           const observer = new IntersectionObserver(entries => {
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -895,7 +1214,6 @@
       const day = d.getDate().toString().padStart(2, '0');
       const month = d.toLocaleString('en-GB', { month: 'short' }).toUpperCase();
       const year = d.getFullYear();
-
       const el = document.createElement('div');
       el.className = 'memory-entry';
       el.innerHTML = `
@@ -914,12 +1232,10 @@
     }
 
     function buildPlaceholder() {
-      // Shown before Supabase is configured
       const placeholders = [
         { date: 'Today', message: 'More memories from Ram will live here. Every one of them, forever.', tag: 'a beginning' },
         { date: 'Soon', message: 'Every little moment, every thing left unsaid — this is where it all goes.', tag: 'a promise' }
       ];
-
       return placeholders.map(p => `
         <div class="memory-entry">
           <div class="entry-date">
